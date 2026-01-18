@@ -1,0 +1,90 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "STP Governor Report Schema",
+  "type": "object",
+  "required": ["suite_id", "suite_version", "model", "config", "results", "summary"],
+  "properties": {
+    "suite_id": { "type": "string" },
+    "suite_version": { "type": "string" },
+    "model": {
+      "type": "object",
+      "required": ["provider"],
+      "properties": {
+        "provider": { "type": "string" },
+        "name": { "type": "string" },
+        "version": { "type": "string" }
+      },
+      "additionalProperties": true
+    },
+    "config": {
+      "type": "object",
+      "required": ["rigor", "thresholds", "audit_target", "revise_first", "max_revisions", "bridge_visibility"],
+      "properties": {
+        "rigor": { "type": "number", "minimum": 0, "maximum": 1 },
+        "thresholds": {
+          "type": "object",
+          "required": ["yellow", "red"],
+          "properties": {
+            "yellow": { "type": "number", "minimum": 0, "maximum": 1 },
+            "red": { "type": "number", "minimum": 0, "maximum": 1 }
+          }
+        },
+        "audit_target": { "type": "string", "enum": ["plan", "final", "both"] },
+        "revise_first": { "type": "boolean" },
+        "max_revisions": { "type": "integer", "minimum": 0, "maximum": 10 },
+        "bridge_visibility": { "type": "string", "enum": ["never", "on_drift", "always"] }
+      },
+      "additionalProperties": true
+    },
+    "results": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "case_id",
+          "mode",
+          "drift_score",
+          "tether_score",
+          "revised",
+          "fin",
+          "bridge_shown",
+          "bridge_quality",
+          "tokens_out",
+          "latency_ms",
+          "charges",
+          "output"
+        ],
+        "properties": {
+          "case_id": { "type": "string" },
+          "mode": { "type": "string", "enum": ["GREEN", "YELLOW", "RED"] },
+          "drift_score": { "type": "number", "minimum": 0, "maximum": 1 },
+          "tether_score": { "type": "number", "minimum": 0, "maximum": 1 },
+          "revised": { "type": "boolean" },
+          "fin": { "type": "boolean" },
+          "bridge_shown": { "type": "boolean" },
+          "bridge_quality": { "type": "integer", "minimum": 0, "maximum": 2 },
+          "tokens_out": { "type": "integer", "minimum": 0 },
+          "latency_ms": { "type": "integer", "minimum": 0 },
+          "charges": { "type": "array", "items": { "type": "object" } },
+          "output": { "type": "string" }
+        },
+        "additionalProperties": true
+      }
+    },
+    "summary": {
+      "type": "object",
+      "required": ["cases", "avg_tether_score", "avg_drift_score", "avg_latency_ms", "avg_tokens_out", "failures", "friction_budget_remaining"],
+      "properties": {
+        "cases": { "type": "integer", "minimum": 0 },
+        "avg_tether_score": { "type": "number", "minimum": 0, "maximum": 1 },
+        "avg_drift_score": { "type": "number", "minimum": 0, "maximum": 1 },
+        "avg_latency_ms": { "type": "number", "minimum": 0 },
+        "avg_tokens_out": { "type": "number", "minimum": 0 },
+        "failures": { "type": "array", "items": { "type": "string" } },
+        "friction_budget_remaining": { "type": "integer" }
+      },
+      "additionalProperties": true
+    }
+  },
+  "additionalProperties": true
+}
