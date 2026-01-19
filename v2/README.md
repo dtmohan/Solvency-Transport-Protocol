@@ -94,14 +94,3 @@ python -m stp.governor \
   --out out/report.json
 
 
-@misc{stp_2026,
-  title        = {The Thermodynamics of Drift: Recursive Solvency and the Mechanics of Semantic Injection in High-Fidelity Loops},
-  author       = {The Helical Imperative},
-  year         = {2026},
-  howpublished = {\url{https://github.com/dtmohan/Solvency-Transport-Protocol}},
-  note         = {STP RFC v1 and v2 drafts; reference governor + eval suite}
-}
-
-
-::contentReference[oaicite:0]{index=0}
-
