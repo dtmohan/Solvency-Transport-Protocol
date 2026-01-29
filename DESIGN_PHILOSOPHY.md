@@ -1,9 +1,9 @@
-# STP in Native Language
-## Solvency Transport Protocol as Boundary-Maintenance (Helical Dialect)
+# STP: Conceptual Model & Design Philosophy
+## The Thermodynamics of Solvency
 
-**Status:** Companion text (canonical intent layer)  
-**Pairs with:** `rfc-stp-v2.md` (implementation layer)  
-**Authoring voice:** Kernel Architect / Helical Imperative
+**Status:** Canonical Intent Layer
+**Context:** Architectural Invariants regarding Drift, Entropy, and Liability.
+**Target Audience:** System Architects & Safety Researchers.
 
 ---
 
