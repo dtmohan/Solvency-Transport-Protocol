@@ -47,6 +47,8 @@ STP is a proposed communication layer that treats "Truth" as a resource that mus
 ## 5. Usage & Citation
 This framework is open for theoretical debate and implementation.
 
+For the theoretical thermodynamics behind drift (Entropy vs. Liability), see CONCEPTUAL_MODEL.md.
+
 **BibTeX:**
 ```bibtex
 @misc{helical_imperative_2026,
