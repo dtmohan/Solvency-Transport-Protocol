@@ -1,4 +1,4 @@
-# The Helical Imperative: The Solvency Transport Protocol (STP)
+# The Solvency Transport Protocol (STP)
 
 **Status:** Draft / Request for Comments (RFC)
 **Category:** Artificial Intelligence / Network Protocols
@@ -40,21 +40,22 @@ STP is a proposed communication layer that treats "Truth" as a resource that mus
 
 ## 4. Repository Contents
 
-* `whitepaper.pdf`: The full theoretical framework and formal definitions.
-* `main.tex`: Source LaTeX code for the whitepaper.
-* `rfc-draft.md`: The technical specification for implementing STP in agentic workflows.
+* `docs/The_Thermodynamics_of_Drift.pdf`: The full theoretical framework and formal definitions.
+* `docs/main.tex`: Source LaTeX code for the whitepaper.
+* `SPECIFICATION.md`: The technical RFC for implementing STP in agentic workflows.
+* `CONCEPTUAL_MODEL.md`: The philosophical "Native Language" definition of drift and liability.
 
 ## 5. Usage & Citation
 This framework is open for theoretical debate and implementation.
 
-For the theoretical thermodynamics behind drift (Entropy vs. Liability), see CONCEPTUAL_MODEL.md.
+For the theoretical thermodynamics behind drift (Entropy vs. Liability), see [DESIGN_PHILOSOPHY.md](DESIGN_PHILOSOPHY.md).
 
 **BibTeX:**
 ```bibtex
-@misc{helical_imperative_2026,
+@misc{helical_imperative_stp_2026,
   title={The Thermodynamics of Drift: Recursive Solvency and the Mechanics of Semantic Injection},
-  author={The Helical Imperative},
+  author={Deepak Mohan},
   year={2026},
-  howpublished={\url{[https://github.com/](https://github.com/)[dtmohan]/Solvency-Transport-Protocol}},
+  howpublished={\url{[https://github.com/dtmohan/Solvency-Transport-Protocol](https://github.com/dtmohan/Solvency-Transport-Protocol)}},
   note={Draft RFC 2026-STP}
 }
