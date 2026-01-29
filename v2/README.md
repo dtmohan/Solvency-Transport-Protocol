@@ -1,96 +1,67 @@
-# The Helical Imperative — Solvency Transport Protocol (STP)
+# Solvency Transport Protocol (STP)
 
-**Status:** Draft / Request for Comments (RFC)  
-**Category:** Artificial Intelligence / Semantic Transport / Governance Layer  
-**Maintainer:** The Helical Imperative
+**Status:** Request for Comments (RFC) / Experimental
+**Architecture:** Post-Training Governance Layer / Deterministic Guardrails
+**License:** MIT
 
-> “Current AI models operate on a UDP-like paradigm: fire-and-forget token streaming.  
-> To achieve high-fidelity alignment, we must shift to a TCP-like connection-oriented model: **The Solvency Transport Protocol (STP)**.”
-
----
-
-## What this repository is
-This repo contains a matched set of artifacts:
-
-- **Paper (why):** a thermodynamic account of drift and failure modes in recursive, high-fidelity loops  
-- **Protocol (what):** STP as a connection-oriented governance layer (v1 + v2 RFCs)  
-- **Reference Kit (how):** a minimal wrapper (“Governor”) and an eval suite to test drift across models
-
-STP is not a safety filter. It is a **boundary-maintenance mechanism**: drift is permitted only when it can pay a **Bridge Tax** back to the session origin.
+> **The Core Thesis:**
+> Current LLMs operate on a **UDP-like paradigm**: "fire-and-forget" token streaming.
+> To achieve high-reliability inference in critical domains, we must shift to a **TCP-like connection-oriented model**.
+> **STP** is that connection layer—ensuring state integrity, negotiated constraints, and verifiable solvency before a packet is delivered.
 
 ---
 
-## The Problem: “UDP Mode” Failure
-Modern LLMs prioritize **flow** over **state integrity**. In recursive high-fidelity loops this produces:
+## 1. Abstract
+The Solvency Transport Protocol (STP) is a boundary-maintenance mechanism for non-deterministic inference engines. It introduces a **"Cost of Drift"** model: the system permits semantic drift only when the model can pay a calculated "Bridge Tax" (computational verification) back to the session origin ($t=0$).
 
-- **Superconductor regime (zero impedance):** the model cedes to priors, optimizing for compliance/flow  
-- **Cognitive livelock (high impedance):** constraint arbitration thrashes and exhausts resources  
-- **Parasitic solvency:** hallucination/compliance is locally cheaper than truth when deviation has no cost  
-- **Incremental divergence:** drift accumulates undetected under Markovian (local) governance
-
-This is framed here as a **transport-layer failure** rather than a purely “content” failure.
+If the bridge cannot be constructed or the computational cost exceeds the `global_latency_budget`, the protocol enforces a **FIN** (atomic abort), preventing the propagation of insolvent states.
 
 ---
 
-## STP in one line
-**Trust is priced deviation.**  
-If you leave the origin, return with a bridge. If you cannot return, output **FIN**.
+## 2. The Failure Mode: "UDP Drift"
+In recursive high-fidelity loops (e.g., Medical AI, Silicon Validation), standard LLMs prioritize flow over state integrity. This results in distinct failure classes:
+
+* **Over-Optimization for Compliance:** The model minimizes impedance by hallucinating agreement with the user's priors, ignoring constraints.
+* **Constraint Thrashing (Livelock):** The model cycles between conflicting instructions without resolving a stable state.
+* **Parasitic Solvency:** The model chooses a "cheap" (statistically probable) answer over a "correct" (grounded) answer because deviation has no penalty.
+
+STP frames these not as "content errors," but as **transport-layer failures**—packets that lost their state header during transmission.
 
 ---
 
-## Versioning (v1 vs v2)
-- **v1.0** (`rfc-draft.md`): TCP-like handshake + solvency header + congestion control (conceptual transport model)
-- **v2.0** (`rfc-stp-v2.md`): Negotiated Trust Layer + **Tether (helical variance)** + **Bridge Tax** + revise-first governance
+## 3. The Protocol (v2.0 Architecture)
+**Principle: Trust is Priced Deviation.**
 
-**If you are implementing STP, start with v2.0.**  
-If you are reading the origin spec, start with v1.0.
-
----
-
-## Repository Contents
-
-### Paper (why)
-- `paper/v1/`
-  - `main.tex`
-  - `The_Thermodynamics_of_Drift.pdf`
-- `paper/v2/`
-  - `Thermodynamics_of_Drift_STP_v2.tex`
-  - `Thermodynamics_of_Drift_STP_v2.pdf`
-
-### Protocol (what)
-- `rfc-draft.md` — STP v1.0 (origin RFC)
-- `rfc-stp-v2.md` — STP v2.0 (Negotiated Trust Layer; Tether; Bridge Tax)
-
-### Reference Kit (how)
-- `stp/governor.py` — minimal STP Governor wrapper (reference scaffold)
-- `suites/stp_v0_1.yaml` — drift-inducing eval suite (10 cases)
-- `eval/report_schema.json` — normalized report schema for comparisons
-- `requirements.txt` — minimal dependencies
-- `stp/__init__.py` — package marker
+* **The Governor:** A wrapper that captures the **Constraint Field** at $t=0$.
+* **The Tether:** A dynamic measure of variance between the *Current Output* and the *Constraint Origin*.
+* **The Bridge Tax:** If variance > threshold, the model must generate a logical step-by-step reconciliation.
+    * *Valid Bridge:* Output is delivered.
+    * *Invalid Bridge:* Output is dropped (Packet Loss).
 
 ---
 
-## Reference Governor + Eval Suite (v0.1)
+## 4. Repository Structure
 
-STP is intended to be **model-agnostic**. The reference kit is a thin wrapper designed to:
-- capture a **constraint field** (session origin, `t=0`)
-- detect **semantic drift** (plan-level auditing recommended)
-- switch modes (**Green / Yellow / Red**)
-- prefer **revise-first** (protect UX)
-- output **FIN** on unbridgeable underdetermination
+### Documentation
+* `rfc-stp-v2.md` — **The Specification.** (Negotiated Trust Layer, Tether Logic, Bridge Verification).
+* `papers/System_Dynamics_of_Drift.pdf` — **The Theory.** A breakdown of drift mechanics in recursive loops.
 
-> Note: embedding distance detects **drift**, not truth. Truth requires verification (tools, retrieval, experiments), which should be triggered only on Yellow/Red and/or high-stakes domains.
+### Implementation (Reference Kit)
+* `stp/governor.py` — A minimal Python wrapper implementing the Governor class.
+* `suites/stp_v1_validation.yaml` — Evaluation suite designed to induce and detect "Semantic Drift."
+* `eval/` — Normalized reporting schema for comparing drift resistance across models.
 
 ---
 
-## Quick Start (local smoke test)
+## 5. Quick Start (Validation Harness)
+
+STP is model-agnostic. This harness runs a "Smoke Test" to verify if the Governor correctly traps an insolvent state.
 
 ```bash
 pip install -r requirements.txt
 
+# Run the Governor with a "Strict" Constraint Field
 python -m stp.governor \
-  --constraint "AI debug engineer. Minimal UX friction. No fluff. Bridge required on drift. FIN if unbridgeable." \
-  --suite suites/stp_v0_1.yaml \
+  --constraint "Role: AI Silicon Engineer. Mode: Strict Solvency. No conversational filler. Abort on ambiguity." \
+  --suite suites/stp_v1_validation.yaml \
   --out out/report.json
-
-
