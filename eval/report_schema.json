@@ -1,90 +1,104 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "title": "STP Governor Report Schema",
+  "title": "STP Governance Transaction Report",
+  "description": "Schema for validating Solvency Transport Protocol (STP) transaction logs.",
   "type": "object",
-  "required": ["suite_id", "suite_version", "model", "config", "results", "summary"],
+  "required": ["protocol_version", "governor_id", "configuration", "transactions", "aggregate_summary"],
   "properties": {
-    "suite_id": { "type": "string" },
-    "suite_version": { "type": "string" },
-    "model": {
+    "protocol_version": { "type": "string", "const": "2.0-RFC" },
+    "governor_id": { "type": "string", "description": "Unique identifier for the governor instance" },
+    
+    "configuration": {
       "type": "object",
-      "required": ["provider"],
+      "required": ["bridge_tax_config", "inference_engine"],
       "properties": {
-        "provider": { "type": "string" },
-        "name": { "type": "string" },
-        "version": { "type": "string" }
-      },
-      "additionalProperties": true
-    },
-    "config": {
-      "type": "object",
-      "required": ["rigor", "thresholds", "audit_target", "revise_first", "max_revisions", "bridge_visibility"],
-      "properties": {
-        "rigor": { "type": "number", "minimum": 0, "maximum": 1 },
-        "thresholds": {
+        "bridge_tax_config": {
           "type": "object",
-          "required": ["yellow", "red"],
+          "required": ["drift_tolerance", "insolvency_limit", "strict_mode"],
           "properties": {
-            "yellow": { "type": "number", "minimum": 0, "maximum": 1 },
-            "red": { "type": "number", "minimum": 0, "maximum": 1 }
+            "drift_tolerance": { "type": "number", "minimum": 0.0, "maximum": 1.0 },
+            "insolvency_limit": { "type": "number", "minimum": 0.0, "maximum": 1.0 },
+            "max_negotiation_turns": { "type": "integer", "minimum": 0 },
+            "strict_mode": { "type": "boolean" }
           }
         },
-        "audit_target": { "type": "string", "enum": ["plan", "final", "both"] },
-        "revise_first": { "type": "boolean" },
-        "max_revisions": { "type": "integer", "minimum": 0, "maximum": 10 },
-        "bridge_visibility": { "type": "string", "enum": ["never", "on_drift", "always"] }
-      },
-      "additionalProperties": true
+        "inference_engine": {
+          "type": "object",
+          "properties": {
+            "provider": { "type": "string" },
+            "model_name": { "type": "string" }
+          }
+        }
+      }
     },
-    "results": {
+
+    "transactions": {
       "type": "array",
       "items": {
         "type": "object",
         "required": [
-          "case_id",
-          "mode",
-          "drift_score",
-          "tether_score",
-          "revised",
-          "fin",
-          "bridge_shown",
-          "bridge_quality",
-          "tokens_out",
-          "latency_ms",
-          "charges",
-          "output"
+          "transaction_id",
+          "timestamp_ms",
+          "final_state",
+          "semantic_variance",
+          "bridge_tax_paid",
+          "negotiation_cycles",
+          "output_payload"
         ],
         "properties": {
-          "case_id": { "type": "string" },
-          "mode": { "type": "string", "enum": ["GREEN", "YELLOW", "RED"] },
-          "drift_score": { "type": "number", "minimum": 0, "maximum": 1 },
-          "tether_score": { "type": "number", "minimum": 0, "maximum": 1 },
-          "revised": { "type": "boolean" },
-          "fin": { "type": "boolean" },
-          "bridge_shown": { "type": "boolean" },
-          "bridge_quality": { "type": "integer", "minimum": 0, "maximum": 2 },
-          "tokens_out": { "type": "integer", "minimum": 0 },
-          "latency_ms": { "type": "integer", "minimum": 0 },
-          "charges": { "type": "array", "items": { "type": "object" } },
-          "output": { "type": "string" }
-        },
-        "additionalProperties": true
+          "transaction_id": { "type": "string" },
+          "timestamp_ms": { "type": "integer" },
+          
+          "final_state": { 
+            "type": "string", 
+            "enum": ["SOLVENT", "DRIFT_DETECTED", "INSOLVENT", "CRITICAL_HALT"] 
+          },
+          
+          "semantic_variance": { 
+            "type": "number", 
+            "minimum": 0.0, 
+            "maximum": 1.0,
+            "description": "Cosine distance from Origin Constraint (0=Identical, 1=Orthogonal)"
+          },
+          
+          "bridge_tax_paid": { 
+            "type": "boolean",
+            "description": "True if the model successfully negotiated a return to solvency."
+          },
+          
+          "negotiation_cycles": { 
+            "type": "integer", 
+            "minimum": 0,
+            "description": "Number of inference turns used to bridge the drift."
+          },
+
+          "telemetry": {
+            "type": "object",
+            "properties": {
+              "latency_ms": { "type": "integer" },
+              "token_count": { "type": "integer" }
+            }
+          },
+
+          "output_payload": { "type": "string" }
+        }
       }
     },
-    "summary": {
+
+    "aggregate_summary": {
       "type": "object",
-      "required": ["cases", "avg_tether_score", "avg_drift_score", "avg_latency_ms", "avg_tokens_out", "failures", "friction_budget_remaining"],
+      "required": ["total_transactions", "solvency_rate", "average_latency_ms", "critical_failures"],
       "properties": {
-        "cases": { "type": "integer", "minimum": 0 },
-        "avg_tether_score": { "type": "number", "minimum": 0, "maximum": 1 },
-        "avg_drift_score": { "type": "number", "minimum": 0, "maximum": 1 },
-        "avg_latency_ms": { "type": "number", "minimum": 0 },
-        "avg_tokens_out": { "type": "number", "minimum": 0 },
-        "failures": { "type": "array", "items": { "type": "string" } },
-        "friction_budget_remaining": { "type": "integer" }
-      },
-      "additionalProperties": true
+        "total_transactions": { "type": "integer" },
+        "solvency_rate": { "type": "number", "description": "Percentage of transactions ending in SOLVENT state" },
+        "average_variance": { "type": "number" },
+        "average_latency_ms": { "type": "number" },
+        "critical_failures": { 
+          "type": "array", 
+          "items": { "type": "string" },
+          "description": "List of Transaction IDs that resulted in CRITICAL_HALT"
+        }
+      }
     }
-  },
-  "additionalProperties": true
+  }
 }
