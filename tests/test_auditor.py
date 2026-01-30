@@ -7,9 +7,11 @@ class TestAuditor(unittest.TestCase):
         # Using a deterministic mock for verification
         class MockEngine:
             def embed(self, text):
-                # Simple mock embedding based on character count
-                vec = np.zeros(1536)
-                vec[0] = len(text) / 1000.0
+                import numpy as np
+                # Create a unique vector based on the text hash to simulate drift
+                seed = sum(ord(c) for c in text)
+                np.random.seed(seed)
+                vec = np.random.rand(1536)
                 return vec / (np.linalg.norm(vec) + 1e-9)
         
         self.auditor = InternalEarAuditor(vector_engine=MockEngine())
