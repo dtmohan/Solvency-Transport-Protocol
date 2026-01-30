@@ -2,7 +2,7 @@ import unittest
 import json
 import hashlib
 from stp.governor import STPKernel, SolvencyZone
-from auditor import InternalEarAuditor
+from stp.auditor import InternalEarAuditor
 
 class MockVectorEngine:
     """Mock for deterministic vector generation."""
