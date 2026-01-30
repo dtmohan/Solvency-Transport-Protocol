@@ -1,0 +1,11 @@
+# STP v2.0-RFC Core Requirements
+numpy>=1.24.0          # Vector math and cosine distance for d_sem
+pyyaml>=6.0.1          # Parsing the validation suites (Panther Lake/Astro-Engine)
+jsonschema>=4.17.0     # Enforcing the 2020-12 Schema in save_report()
+
+# Auditor / "Internal Ear" Dependencies
+sentence-transformers  # Local embedding generation for the Recursive Truth Axis
+torch>=2.0.0           # Backend for the Auditor's embedding models
+
+# Testing & Development
+pytest>=7.3.0          # Running the helical ledger and auditor tests
