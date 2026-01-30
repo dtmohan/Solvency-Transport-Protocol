@@ -63,5 +63,5 @@ pip install -r requirements.txt
 # Run the Governor with a "Strict" Constraint Field
 python -m stp.governor \
   --constraint "Role: AI Silicon Engineer. Mode: Strict Solvency. No conversational filler. Abort on ambiguity." \
-  --suite suites/stp_v1_validation.yaml \
+  --suite suites/stp_v2_validation.yaml \
   --out out/report.json
