@@ -15,9 +15,10 @@ class MockVectorEngine:
 
 class TestHelicalLedger(unittest.TestCase):
     def setUp(self):
-        self.constraint = "Hard Logical Coherence: STP v2.0"
-        self.auditor = InternalEarAuditor(vector_engine=MockVectorEngine())
-        self.kernel = STPKernel(constraint=self.constraint, auditor=self.auditor)
+        self.auditor = MockAuditor()
+        # Ensure this path matches your local folder structure
+        self.config_path = "eval/deployment_config.json" 
+        self.kernel = STPKernel(config_path=self.config_path, auditor=self.auditor)
 
     def test_genesis_anchor(self):
         """Verify KEYFRAME_COMMIT at t=0."""
