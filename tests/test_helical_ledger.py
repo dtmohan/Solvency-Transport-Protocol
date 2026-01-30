@@ -1,7 +1,7 @@
 import unittest
 import json
 import hashlib
-from governor import STPKernel, SolvencyZone, canonical_hash
+from stp.governor import STPKernel, SolvencyZone
 from auditor import InternalEarAuditor
 
 class MockVectorEngine:
