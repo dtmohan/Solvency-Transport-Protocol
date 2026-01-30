@@ -1,8 +1,9 @@
-# stp/__init__.py
 """
-STP Governor package (reference implementation scaffold).
+STP Governor package (v2.0-RFC).
+Ensures state integrity and recursive solvency for non-deterministic engines.
+"""
 
-This package is intentionally minimal and model-agnostic.
-See: stp/governor.py
-"""
-__all__ = ["governor"]
+from .governor import STPKernel, SolvencyZone
+from .auditor import InternalEarAuditor
+
+__all__ = ["STPKernel", "SolvencyZone", "InternalEarAuditor"]
